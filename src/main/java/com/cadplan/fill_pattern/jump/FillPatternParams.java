@@ -20,7 +20,7 @@
  *
  */
 
-package com.cadplan.jump;
+package com.cadplan.fill_pattern.jump;
 
 import java.awt.*;
 

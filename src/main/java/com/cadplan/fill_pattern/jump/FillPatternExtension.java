@@ -20,7 +20,7 @@
  *
  */
 
-package com.cadplan.jump;
+package com.cadplan.fill_pattern.jump;
 
 import com.vividsolutions.jump.workbench.plugin.Extension;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;

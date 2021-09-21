@@ -21,13 +21,13 @@
  */
 
 
-package com.cadplan.jump;
+package com.cadplan.fill_pattern.jump;
 
+import com.cadplan.fill_pattern.fileio.TextFile;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;
 import com.vividsolutions.jump.workbench.ui.renderer.style.BasicFillPattern;
 import com.vividsolutions.jump.workbench.ui.renderer.style.FillPatternFactory;
 import com.vividsolutions.jump.workbench.ui.renderer.style.WKTFillPattern;
-import com.cadplan.fileio.TextFile;
 
 import javax.swing.*;
 import java.util.Collection;
