@@ -29,6 +29,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -140,4 +142,8 @@ public class FillPatternsPlugIn extends AbstractPlugIn {
         return true;
     }
 
+    @Override
+    public Icon getIcon() {
+      return new ImageIcon(getClass().getResource("hexagons.png"));
+    }
 }
