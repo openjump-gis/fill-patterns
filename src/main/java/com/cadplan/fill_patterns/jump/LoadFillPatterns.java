@@ -94,7 +94,7 @@ public class LoadFillPatterns extends Component {
     FillPatternsParams.images = new Image[patternNames.length];
     FillPatternsParams.imageNames = patternNames;
     for (int i = 0; i < patternNames.length; i++) {
-      Logger.debug("Loading pattern: " + patternNames[i]);
+      Logger.trace("Loading pattern: " + patternNames[i]);
       if (patternNames[i].toLowerCase().endsWith(".wkt")) {
         TextFile tfile = new TextFile(folder.getPath(), patternNames[i]);
         tfile.openRead();
@@ -158,7 +158,7 @@ public class LoadFillPatterns extends Component {
             }
           }
         }
-        Logger.debug("SVG Image:" + name + "   size=" + size);
+        Logger.trace("SVG Image:" + name + "   size=" + size);
         r.setImageWidth(size);
         r.setImageHeight(size);
         //r.setBackgroundColor(java.awt.Color.white);
@@ -202,11 +202,9 @@ public class LoadFillPatterns extends Component {
     } catch (InterruptedException ignored) {
     }
 
-    Logger.debug("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
+    Logger.trace("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
     if (image.getWidth(this) < 0) image = null;
 
-//       Icon icon = new ImageIcon(image);
     return (image);
-
   }
 }
