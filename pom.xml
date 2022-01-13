@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cadplan</groupId>
-  <artifactId>jump-fill-pattern</artifactId>
+  <artifactId>fill-patterns</artifactId>
   <version>2.1.0</version>
 
   <properties>
