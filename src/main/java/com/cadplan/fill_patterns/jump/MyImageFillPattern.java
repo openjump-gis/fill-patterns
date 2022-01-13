@@ -20,7 +20,7 @@
  *
  */
 
-package com.cadplan.fill_pattern.jump;
+package com.cadplan.fill_patterns.jump;
 
 import com.vividsolutions.jump.workbench.ui.renderer.style.BasicFillPattern;
 import com.vividsolutions.jump.util.Blackboard;
@@ -89,8 +89,8 @@ public class MyImageFillPattern extends BasicFillPattern {
 
     String imageName = (String) getProperties().get(FILENAME_KEY);
     Image image = null;
-    for (int i = 0; i < FillPatternParams.imageNames.length; i++) {
-      if (FillPatternParams.imageNames[i].equals(imageName)) image = FillPatternParams.images[i];
+    for (int i = 0; i < FillPatternsParams.imageNames.length; i++) {
+      if (FillPatternsParams.imageNames[i].equals(imageName)) image = FillPatternsParams.images[i];
     }
     BufferedImage bufferedImage;
     if (image == null) {

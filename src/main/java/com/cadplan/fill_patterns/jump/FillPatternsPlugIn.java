@@ -20,11 +20,13 @@
  *
  */
 
-package com.cadplan.fill_pattern.jump;
+package com.cadplan.fill_patterns.jump;
+
+import static com.cadplan.fill_patterns.jump.FillPatternsExtension.NAME;
+import static com.cadplan.fill_patterns.jump.FillPatternsExtension.VERSION;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,11 +44,7 @@ import com.vividsolutions.jump.workbench.ui.plugin.AboutPlugIn;
 /**
  * User: geoff Date: 28/04/2007 Time: 09:40:22 Copyright 2007 Geoffrey G Roy.
  */
-public class FillPatternPlugIn extends AbstractPlugIn {
-
-    private final String version = "2.1.0 (2021-08-19)";
-
-    public final static String NAME = "Fill Patterns";
+public class FillPatternsPlugIn extends AbstractPlugIn {
 
     @Override
     public void initialize(PlugInContext context) {
@@ -115,7 +113,7 @@ public class FillPatternPlugIn extends AbstractPlugIn {
         final JTextArea jTextArea_Help2 = new JTextArea();
         jTextArea_Help2.setFont(new Font(fontName, Font.PLAIN, 16));
         jTextArea_Help2.setText("http://www.cadplan.com.au -  Version: "
-                + version);
+                + VERSION);
 
         final JTextArea jTextArea_Help3 = new JTextArea();
         jTextArea_Help3.setFont(new Font("Arial", Font.PLAIN, 14));

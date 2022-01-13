@@ -1,4 +1,4 @@
-package com.cadplan.fill_pattern.fileio;
+package com.cadplan.fill_patterns.fileio;
 
 import java.io.*;
 import java.util.Properties;

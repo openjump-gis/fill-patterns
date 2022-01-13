@@ -20,21 +20,18 @@
  *
  */
 
-package com.cadplan.fill_pattern.jump;
+package com.cadplan.fill_patterns.jump;
 
-import com.vividsolutions.jump.workbench.plugin.Extension;
-import com.vividsolutions.jump.workbench.plugin.PlugInContext;
+import java.awt.*;
 
 /**
  * User: geoff
- * Date: 28/04/2007
- * Time: 09:45:45
- * Copyright 2007 Geoffrey G Roy.
+ * Date: 4/07/2007
+ * Time: 11:32:27
+ * Copyright 2005 Geoffrey G Roy.
  */
-public class FillPatternExtension extends Extension
+public class FillPatternsParams
 {
-    public void configure(PlugInContext context)
-    {
-        new FillPatternPlugIn().initialize(context);
-    }
+    public static Image[] images;
+    public static String [] imageNames;
 }

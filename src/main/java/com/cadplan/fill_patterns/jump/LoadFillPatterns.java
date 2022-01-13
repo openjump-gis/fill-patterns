@@ -21,9 +21,10 @@
  */
 
 
-package com.cadplan.fill_pattern.jump;
+package com.cadplan.fill_patterns.jump;
 
-import com.cadplan.fill_pattern.fileio.TextFile;
+import com.cadplan.fill_patterns.fileio.TextFile;
+import com.vividsolutions.jump.workbench.Logger;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;
 import com.vividsolutions.jump.workbench.ui.renderer.style.BasicFillPattern;
 import com.vividsolutions.jump.workbench.ui.renderer.style.FillPatternFactory;
@@ -50,23 +51,18 @@ import org.locationtech.jts.io.WKTReader;
  * Time: 09:41:24
  * Copyright 2005 Geoffrey G Roy.
  */
-public class LoadFillPatterns extends Component implements FilenameFilter {
+public class LoadFillPatterns extends Component {
 
-  boolean debug = false;
   PlugInContext context;
   MediaTracker tracker;
-  String wd;
+
   String[] patternNames = null;
   Collection<BasicFillPattern> customFillPatterns;
 
   public LoadFillPatterns(PlugInContext context) {
     this.context = context;
 
-    File pluginDir = context.getWorkbenchContext().getWorkbench()
-        .getPlugInManager().getPlugInDirectory();
-
     tracker = new MediaTracker(this);
-    wd = pluginDir.getAbsolutePath(); //.getProperty("user.dir");
 
     customFillPatterns = (Collection) context.getWorkbenchContext().getWorkbench()
         .getBlackboard().get(FillPatternFactory.CUSTOM_FILL_PATTERNS_KEY, new ArrayList());
@@ -75,30 +71,32 @@ public class LoadFillPatterns extends Component implements FilenameFilter {
 
   }
 
-
-  public boolean accept(File dir, String name) {
-    boolean match = false;
-    if (name.toLowerCase().endsWith(".gif") ||
-        name.toLowerCase().endsWith(".jpeg") ||
-        name.toLowerCase().endsWith(".jpg") ||
-        name.toLowerCase().endsWith(".png") ||
-        name.toLowerCase().endsWith(".svg") ||
-        name.toLowerCase().endsWith(".wkt")) match = true;
-    return match;
-  }
-
   public void loadNames() {
-    File file = new File(wd + File.separator + "FillPatterns");
-    if (!file.exists()) file.mkdirs();
-    if (debug) System.out.println("Location: " + file);
-    patternNames = file.list(this);
-    if (patternNames == null || patternNames.length == 0) return;
-    FillPatternParams.images = new Image[patternNames.length];
-    FillPatternParams.imageNames = patternNames;
+    File folder = FillPatternsExtension.getFillPatternsFolder(context.getWorkbenchContext());
+    if (!folder.exists()) {
+      return;
+    }
+    Logger.debug("Location: " + folder.getAbsolutePath());
+
+    // list allowed file extensions only
+    patternNames = folder.list(new FilenameFilter() {
+      public boolean accept(File dir, String name) {
+        String lcname = name.toLowerCase();
+        return lcname.endsWith(".gif") || lcname.endsWith(".jpeg")
+            || lcname.endsWith(".jpg") || lcname.endsWith(".png")
+            || lcname.endsWith(".svg") || lcname.endsWith(".wkt");
+      }
+    });
+    if (patternNames == null || patternNames.length == 0) {
+      Logger.error("Location: " + folder.getAbsolutePath() + "does not contain any valid patterns.");
+      return;
+    }
+    FillPatternsParams.images = new Image[patternNames.length];
+    FillPatternsParams.imageNames = patternNames;
     for (int i = 0; i < patternNames.length; i++) {
-      if (debug) System.out.println("Loading pattern: " + patternNames[i]);
+      Logger.debug("Loading pattern: " + patternNames[i]);
       if (patternNames[i].toLowerCase().endsWith(".wkt")) {
-        TextFile tfile = new TextFile(wd + File.separator + "FillPatterns", patternNames[i]);
+        TextFile tfile = new TextFile(folder.getPath(), patternNames[i]);
         tfile.openRead();
         String text = tfile.readAll();
         tfile.close();
@@ -123,18 +121,19 @@ public class LoadFillPatterns extends Component implements FilenameFilter {
           JOptionPane.showMessageDialog(null, "Error parsing WKT file: " + patternNames[i] + "\n" + text,
               "Error...", JOptionPane.ERROR_MESSAGE);
         }
-        if (debug) System.out.println("WKT:" + text);
+        Logger.debug("WKT:" + text);
 
       } else if (patternNames[i].toLowerCase().endsWith(".svg")) {
         String name = patternNames[i];
         Image image = null;
         URL url = null;
         try {
-          url = new URL("file:///" + wd + File.separator + "FillPatterns" + File.separator + patternNames[i]);
+          //url = new URL("file:///" + wd + File.separator + "FillPatterns" + File.separator + patternNames[i]);
+          url = new File( folder, patternNames[i]).toURI().toURL();
         } catch (MalformedURLException ex) {
           JOptionPane.showMessageDialog(null, "Error: " + ex, "Error...", JOptionPane.ERROR_MESSAGE);
         }
-        if (debug) System.out.println("Loading SVG image: " + name);
+        Logger.debug("Loading SVG image: " + name);
 
         SVGRasterizer r = new SVGRasterizer(url);
         int size = 32;
@@ -159,14 +158,14 @@ public class LoadFillPatterns extends Component implements FilenameFilter {
             }
           }
         }
-        if (debug) System.out.println("SVG Image:" + name + "   size=" + size);
+        Logger.debug("SVG Image:" + name + "   size=" + size);
         r.setImageWidth(size);
         r.setImageHeight(size);
         //r.setBackgroundColor(java.awt.Color.white);
         try {
           image = r.createBufferedImage();
         } catch (TranscoderException ex) {
-          if (debug) System.out.println("ERROR:" + ex);
+          Logger.debug(ex);
         }
         try {
           tracker.addImage(image, 1);
@@ -174,12 +173,12 @@ public class LoadFillPatterns extends Component implements FilenameFilter {
         } catch (InterruptedException ignored) {
         }
 
-        if (debug) System.out.println("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
-        FillPatternParams.images[i] = image;
+        Logger.debug("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
+        FillPatternsParams.images[i] = image;
         customFillPatterns.add(new MyImageFillPattern(name));
       } else {
-        Image image = loadImage(wd + File.separator + "FillPatterns" + File.separator + patternNames[i]);
-        FillPatternParams.images[i] = image;
+        Image image = loadImage( new File( folder, patternNames[i]).getPath() );
+        FillPatternsParams.images[i] = image;
         customFillPatterns.add(new MyImageFillPattern(patternNames[i]));
       }
     }
@@ -203,7 +202,7 @@ public class LoadFillPatterns extends Component implements FilenameFilter {
     } catch (InterruptedException ignored) {
     }
 
-    if (debug) System.out.println("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
+    Logger.debug("Image size: " + image.getWidth(this) + ", " + image.getHeight(this));
     if (image.getWidth(this) < 0) image = null;
 
 //       Icon icon = new ImageIcon(image);

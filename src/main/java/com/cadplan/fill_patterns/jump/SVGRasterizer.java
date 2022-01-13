@@ -7,7 +7,7 @@
 
  *****************************************************************************/
 
-package com.cadplan.fill_pattern.jump;
+package com.cadplan.fill_patterns.jump;
 
 import java.awt.image.BufferedImage;
 
