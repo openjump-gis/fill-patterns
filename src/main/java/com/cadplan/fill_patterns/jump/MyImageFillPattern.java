@@ -22,6 +22,7 @@
 
 package com.cadplan.fill_patterns.jump;
 
+import com.vividsolutions.jump.workbench.Logger;
 import com.vividsolutions.jump.workbench.ui.renderer.style.BasicFillPattern;
 import com.vividsolutions.jump.util.Blackboard;
 import com.vividsolutions.jump.util.CollectionUtil;
@@ -92,14 +93,16 @@ public class MyImageFillPattern extends BasicFillPattern {
     for (int i = 0; i < FillPatternsParams.imageNames.length; i++) {
       if (FillPatternsParams.imageNames[i].equals(imageName)) image = FillPatternsParams.images[i];
     }
+
     BufferedImage bufferedImage;
     if (image == null) {
-      System.out.println("createImage: NULL image");
+      Logger.error("NULL image");
       bufferedImage = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
       Graphics2D g = (Graphics2D) bufferedImage.getGraphics();
       g.setColor(Color.BLACK);
       g.drawString("No Pattern", 0, 20);
-    } else {
+    } 
+    else {
       bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
       Graphics2D g = (Graphics2D) bufferedImage.getGraphics();
       g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,

@@ -30,12 +30,14 @@ import com.vividsolutions.jump.workbench.ui.renderer.style.BasicFillPattern;
 import com.vividsolutions.jump.workbench.ui.renderer.style.FillPatternFactory;
 import com.vividsolutions.jump.workbench.ui.renderer.style.WKTFillPattern;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.awt.*;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -177,13 +179,22 @@ public class LoadFillPatterns extends Component {
         FillPatternsParams.images[i] = image;
         customFillPatterns.add(new MyImageFillPattern(name));
       } else {
-        Image image = loadImage( new File( folder, patternNames[i]).getPath() );
+        Image image = loadImageIO(new File( folder, patternNames[i]));
+            //loadImage( new File( folder, patternNames[i]).getPath() );
         FillPatternsParams.images[i] = image;
         customFillPatterns.add(new MyImageFillPattern(patternNames[i]));
       }
     }
   }
 
+  public Image loadImageIO(File file) {
+    try {
+      return ImageIO.read(file);
+    } catch (IOException e) {
+      Logger.error(e);
+      return null;
+    }
+  }
 
   public Image loadImage(String name) {
     URL url = null;
